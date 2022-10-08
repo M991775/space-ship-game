@@ -40,12 +40,17 @@ Spacehipster.GameState = {
         this.initBullets();
         this.shootingTimer = this.game.time.events.loop(Phaser.Timer.SECOND/5,
             this.createPlayerBullet, this);
-
-        var enemy = new SpaceHipster.Enemy(this.game, 100, 100, 'greenEnemy', 10, []);
-        this.game.add.existing(enemy);
+        
+        this.initEnemy();
     },
 
     update: function() {
+
+        this.game.physics.arcade.overlap(this.playerBullets,
+            this.enemies, this.damageEnemy, null, this);
+
+        this.game.physics.arcade.overlap(this.enemyBullets,
+            this.player, this.killPlayer, null, this);
 
         this.player.body.velocity.x = 0;
 
@@ -77,5 +82,29 @@ Spacehipster.GameState = {
         bullet.body.velocity.y = this.BULLET_SPEED;
 
     },
+
+    initEnemy: function(){
+        this.enemies = this.add.group();
+        this.enemies.enableBody = true;
+
+        this.enemyBullets = this.add.group();
+        this.enemyBullets.enableBody = true;
+
+        var enemy = new SpaceHipster.Enemy(this.game, 100, 100, 'greenEnemy', 10, this.enemyBullets);
+        this.enemies.add(enemy);
+
+        enemy.body.velocity.x = 100;
+        enemy.body.velocity.y = 50;
+    },
+
+    damageEnemy: function(bullet, enemy){
+        enemy.damage(1);
+        bullet.kill();
+    },
+
+    killPlayer: function(){
+        this.player.kill();
+        this.game.state.start('GameState');
+    }
 }
 

@@ -75,14 +75,13 @@ SpaceHipster.Enemy.prototype.shoot = function() {
     var bullet = this.enemyBullets.getFirstExists(false);
 
     if(!bullet) {
-        bullet = new SpaceHipster.enemyBullet(this.game, this.x, this.bottom);
+        bullet = new SpaceHipster.EnemyBullet(this.game, this.x, this.bottom);
         this.enemyBullets.add(bullet);
 
     }
     else{
-        bullet.reset(this.player.x, this.player.y);
+        bullet.reset(this.x, this.y);
     }
 
     bullet.body.velocity.y = 100;
 }
-

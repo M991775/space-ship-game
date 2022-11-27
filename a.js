@@ -1,13 +1,18 @@
 var Spacehipster = Spacehipster || {};
 
 Spacehipster.GameState = {
-    init: function() {
+    init: function(currentLevel) {
         this.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
 
         this.game.physics.startSystem(Phaser.Physics.ARCADE);
 
         this.PLAYER_SPEED = 200;
         this.BULLET_SPEED = -1000;
+
+        this.numLevels = 3;
+        this.currentLevel = currentLevel ? currentLevel : 1;
+
+        console.log('current level:' + this.currentLevel);
     },
 
     preload: function() {
@@ -19,7 +24,9 @@ Spacehipster.GameState = {
         this.load.spritesheet("redEnemy","images/red_enemy.png", 50, 46, 3, 1, 1);
         this.load.spritesheet("greenEnemy","images/green_enemy.png", 50, 46, 3, 1, 1);
 
-
+        this.load.text("level1", 'level1.json');
+        this.load.text("level2", 'level2.json');
+        this.load.text("level3", 'level3.json');
     },
 
     create: function(){
@@ -125,41 +132,21 @@ Spacehipster.GameState = {
     },
 
     loadLevel: function(){
+        this.currentEnemyIndex = 0;
+        this.levelData = JSON.parse(this.game.cache.getText('level' + this.currentlevel));
+        
+        this.endOfLevelTimer = this.game.time.events.add(this.levelData.duration * 1000, function(){
+            console.log("level ended");
 
-        this.currentEnemtIndex = 0;
-        this.levelData = {
-            "duration": 35,
-            "enemies":
-            [
-                {
-                    "time": 1,
-                    "x": 0.05,
-                    "health": 6,
-                    "speedX":20,
-                    "speedY":50,
-                    "key":"greenEnemy",
-                    "scale": 3
-                },
-                {
-                    "time": 2,
-                    "x": 0.1,
-                    "health": 8,
-                    "speedX":25,
-                    "speedY":55,
-                    "key":"greenEnemy",
-                    "scale": 3
-                },
-                {
-                    "time": 3,
-                    "x": 0.15,
-                    "health": 10,
-                    "speedX":30,
-                    "speedY":60,
-                    "key":"greenEnemy",
-                    "scale": 3
-                }
-            ]
-        };
+            if(this.currentLevel < this.numLevels){
+                this.currentLevel++;
+            }
+            else{
+                this.currentlevel = 1;
+            }
+
+            this.game.state.start('GameState', true, false, this.currentLevel);
+        },this);
 
         this.scheduleNextEnemy();
     },

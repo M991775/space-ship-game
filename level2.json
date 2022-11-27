@@ -1,0 +1,32 @@
+{
+    "duration": 20,
+    "enemies":
+    [
+        {
+            "time": 1,
+            "x": 0.05,
+            "health": 6,
+            "speedX":20,
+            "speedY":50,
+            "key":"yellow_Enemy",
+            "scale": 3
+        },
+        {
+            "time": 2,
+            "x": 0.1,
+            "health": 8,
+            "speedX":25,
+            "speedY":55,
+            "key":"yellow_Enemy",
+            "scale": 3
+        },
+        {
+            "time": 3,
+            "x": 0.15,
+            "health": 10,
+            "speedX":30,
+            "speedY":60,
+            "key":"yellow_Enemy",
+            "scale": 3
+        }]
+}
